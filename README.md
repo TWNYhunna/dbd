@@ -1,7 +1,7 @@
 ## Files used for Twitch Bots.
 
 The purpose of these files is to make chat moderation slightly easier for DBD streamers.  
-Codes in [codes](../main/codes) will not include permanent codes.
+Permanent codes are not included in [codes](../main/codes) file.
 
 All permanent codes:
 >"LETSROLL" - Dwight Miniature Charm\
