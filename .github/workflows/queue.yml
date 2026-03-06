@@ -1,0 +1,27 @@
+name: queues
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: fetch
+        run: |
+          curl -s https://api.deadbyqueue.com/queuetime?region=eu-central-1 > queue_eu0
+          curl -s https://api.deadbyqueue.com/queuetime?region=eu-west-1 > queue_eu1
+          curl -s https://api.deadbyqueue.com/queuetime?region=eu-west-2 > queue_eu2
+
+      - name: commit
+        run: |
+          git config --global user.name "queues"
+          git config --global user.email "queue@queue.com"
+          git add queue_eu*
+          git commit -m "update queue" || exit 0
+          git push
