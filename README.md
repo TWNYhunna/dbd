@@ -1,11 +1,11 @@
-## Files used for Twitch Bots.
+# DBD related files used for Twitch Bots
+### Codes
+```codes``` displays ONLY new redeemable codes and its expiration date,<br/>
+```codes_permanent``` displays all permanent codes,<br/>
+```codes_pride``` displays all Pride codes.
 
-The purpose of these files is to make chat moderation slightly easier for DBD streamers.  
-Permanent codes are not included in [codes](../main/codes) file.
-
-All permanent codes:
->"LETSROLL" - Dwight Miniature Charm\
->"REDDIT1MIL" - 8-bit Crow Badge\
->"WARRIORPUPPERS" - Puppers Charm
-
-All Pride badges & charms codes are listed [here](https://x.com/paulieesther1/status/1937244895829274849).
+Example message: ```Available Codes: FINDERSCREEPERS • [Badge, Nov 25] | JOKERSWILD • [Cosmetic, Mar 20]```
+### Drops
+```drops``` shows ongoing Twitch drops.<br/>Example message: ```Current drops: 200k BPs • Winter Crow Badge • Holiday Horse Banner [Jan 6]```
+### Queue
+Gets queue times for EU region from [Dead by Queue](https://www.deadbyqueue.com), simplifies and formats the output into one simple message in ```queue```.<br/>Example message: ```Queue Times: 🇩🇪 2m22s/2m22s • 🇮🇪 2m22s/2m22s • 🇬🇧 2m22s/2m22s | Offline```
