@@ -1,7 +1,7 @@
 name: queues
 on:
   schedule:
-    - cron: "2,12,22,32,42,52 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -17,14 +17,39 @@ jobs:
 
       - name: fetch
         run: |
-          curl -s https://api.deadbyqueue.com/queuetime?region=eu-central-1 > queue_eu0
-          curl -s https://api.deadbyqueue.com/queuetime?region=eu-west-1 > queue_eu1
-          curl -s https://api.deadbyqueue.com/queuetime?region=eu-west-2 > queue_eu2
+          format() {
+            local region=$1
+            curl -s "https://api.deadbyqueue.com/queuetime?region=$region" \
+              | jq -r '"\(.killer/60|floor)m\(.killer%60)s/\(.survivor/60|floor)m\(.survivor%60)s"'
+          }
+
+          format_event() {
+            local region=$1
+            local response
+            response=$(curl -s "https://api.deadbyqueue.com/queuetime?region=$region&mode=live-event")
+          
+            if echo "$response" | jq empty 2>/dev/null; then
+              echo "$response" | jq -r '"\(.killer/60|floor)m\(.killer%60)s/\(.survivor/60|floor)m\(.survivor%60)s"'
+            else
+              echo "$response"
+            fi
+          }
+          
+          FRANKFURT=$(format "eu-central-1")
+          DUBLIN=$(format "eu-west-1")
+          LONDON=$(format "eu-west-2")
+
+          FRANKFURT_EVENT=$(format_event "eu-central-1")
+          DUBLIN_EVENT=$(format_event "eu-west-1")
+          LONDON_EVENT=$(format_event "eu-west-2")
+          
+          echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
+          echo "Event Queues: 🇩🇪 $FRANKFURT_EVENT • 🇮🇪 $DUBLIN_EVENT • 🇬🇧 $LONDON_EVENT" > queue_event
 
       - name: commit
         run: |
           git config --global user.name "queues"
           git config --global user.email "queue@queue.com"
-          git add queue_eu*
-          git commit -m "update queue" || exit 0
+          git add queue queue_event
+          git commit -m "update" || exit 0
           git push
