@@ -28,7 +28,7 @@ jobs:
             local response
             response=$(curl -s "https://api.deadbyqueue.com/queuetime?region=$region&mode=live-event")
           
-            if echo "$response" | jq empty 2>/dev/null; then
+            if echo "$response" | jq -e . >/dev/null 2>&1; then
               echo "$response" | jq -r '"\(.killer/60|floor)m\(.killer%60)s/\(.survivor/60|floor)m\(.survivor%60)s"'
             else
               echo "$response"
