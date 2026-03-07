@@ -22,26 +22,14 @@ jobs:
             curl -s "https://api.deadbyqueue.com/queuetime?region=$region" \
               | jq -r '"\(.killer/60|floor)m\(.killer%60)s/\(.survivor/60|floor)m\(.survivor%60)s"'
           }
-
-          format_event() {
-            local region=$1
-            local response
-            response=$(curl -s "https://api.deadbyqueue.com/queuetime?region=$region&mode=live-event")
-          
-            if [[ "$response" =~ ^\{ ]]; then
-              echo "$response" | jq -r '"\(.killer/60|floor)m\(.killer%60)s/\(.survivor/60|floor)m\(.survivor%60)s"'
-            else
-              echo "$response"
-            fi
-          }
           
           FRANKFURT=$(format "eu-central-1")
           DUBLIN=$(format "eu-west-1")
           LONDON=$(format "eu-west-2")
 
-          FRANKFURT_EVENT=$(format_event "eu-central-1")
-          DUBLIN_EVENT=$(format_event "eu-west-1")
-          LONDON_EVENT=$(format_event "eu-west-2")
+          FRANKFURT_EVENT=$(format_event "eu-central-1&mode=live-event")
+          DUBLIN_EVENT=$(format_event "eu-west-1&mode=live-event")
+          LONDON_EVENT=$(format_event "eu-west-2&mode=live-event")
           
           echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
           echo "Event Queues: 🇩🇪 $FRANKFURT_EVENT • 🇮🇪 $DUBLIN_EVENT • 🇬🇧 $LONDON_EVENT" > queue_event
