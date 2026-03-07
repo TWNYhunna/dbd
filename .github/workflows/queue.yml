@@ -1,15 +1,20 @@
 name: queues
 on:
   schedule:
-    - cron: "2,12,22,32,42,52 * * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write  
+  contents: write
+
+concurrency:
+  group: queues
+  cancel-in-progress: true
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
 
     steps:
       - name: checkout
@@ -36,8 +41,9 @@ jobs:
 
       - name: commit
         run: |
+          git diff --quiet && exit 0
           git config --global user.name "queues"
           git config --global user.email "queue@queue.com"
           git add queue
-          git commit -m "update" || exit 0
+          git commit -m "Update queue"
           git push
