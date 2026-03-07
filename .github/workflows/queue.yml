@@ -27,6 +27,10 @@ jobs:
           FRANKFURT=$(format "eu-central-1")
           DUBLIN=$(format "eu-west-1")
           LONDON=$(format "eu-west-2")
+
+          if [[ "$LONDON" == "$DUBLIN" ]]; then
+            LONDON="Offline"
+          fi
           
           echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
 
