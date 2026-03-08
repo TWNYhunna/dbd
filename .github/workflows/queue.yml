@@ -29,9 +29,14 @@ jobs:
             echo "$response" | sed -e 's/Killer: //g' -e 's/Survivor: //g' -e 's/ | /\//g'
           }
 
-          FRANKFURT=$(format "eu-central-1")
-          DUBLIN=$(format "eu-west-1")
-          LONDON=$(format "eu-west-2")
+          format "eu-central-1" > FF &
+          format "eu-west-1" > DB &
+          format "eu-west-2" > LN &
+          wait
+
+          FRANKFURT=$(cat FF)
+          DUBLIN=$(cat DB)
+          LONDON=$(cat LN)
 
           if [[ "$LONDON" == "$DUBLIN" ]]; then
             LONDON="Offline"
