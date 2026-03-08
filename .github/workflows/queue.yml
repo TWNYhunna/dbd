@@ -25,7 +25,7 @@ jobs:
           format() {
             local region=$1
             local response
-            response=$(curl -s "https://api.deadbyqueue.com/queuetime?region=$region")
+            response=$(curl -s --max-time 5 "https://api.deadbyqueue.com/queuetime?region=$region")
             echo "$response" | sed -e 's/Killer: //g' -e 's/Survivor: //g' -e 's/ | /\//g'
           }
 
