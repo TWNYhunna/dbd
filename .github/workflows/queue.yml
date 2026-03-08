@@ -14,7 +14,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
 
     steps:
       - name: checkout
@@ -28,16 +28,19 @@ jobs:
             response=$(curl -s "https://api.deadbyqueue.com/queuetime?region=$region")
             echo "$response" | sed -e 's/Killer: //g' -e 's/Survivor: //g' -e 's/ | /\//g'
           }
-          
-          FRANKFURT=$(format "eu-central-1")
-          DUBLIN=$(format "eu-west-1")
-          LONDON=$(format "eu-west-2")
 
-          if [[ "$LONDON" == "$DUBLIN" ]]; then
-            LONDON="Offline"
-          fi
+          for i in {1..5}; do
+            FRANKFURT=$(format "eu-central-1")
+            DUBLIN=$(format "eu-west-1")
+            LONDON=$(format "eu-west-2")
+
+            if [[ "$LONDON" == "$DUBLIN" ]]; then
+              LONDON="Offline"
+            fi
           
-          echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
+            echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
+            sleep 60
+          done
 
       - name: commit
         run: |
