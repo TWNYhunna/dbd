@@ -29,18 +29,14 @@ jobs:
             echo "$response" | sed -e 's/Killer: //g' -e 's/Survivor: //g' -e 's/ | /\//g'
           }
 
-          for i in $(seq 1 5); do
-            FRANKFURT=$(format "eu-central-1")
-            DUBLIN=$(format "eu-west-1")
-            LONDON=$(format "eu-west-2")
+          FRANKFURT=$(format "eu-central-1")
+          DUBLIN=$(format "eu-west-1")
+          LONDON=$(format "eu-west-2")
 
-            if [[ "$LONDON" == "$DUBLIN" ]]; then
-              LONDON="Offline"
-            fi
-          
-            echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
-            sleep 60
-          done
+          if [[ "$LONDON" == "$DUBLIN" ]]; then
+            LONDON="Offline"
+          fi
+          echo "Queue Times: 🇩🇪 $FRANKFURT • 🇮🇪 $DUBLIN • 🇬🇧 $LONDON" > queue
 
       - name: commit
         run: |
